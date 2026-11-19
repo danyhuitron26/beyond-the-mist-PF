@@ -231,10 +231,26 @@ $imagenesPais = [
                     }
 
                 });
+                
 
             });
 
         });
+
+        // Revisar si se seleccionó un país desde la página de inicio
+        const parametros = new URLSearchParams(window.location.search);
+        const paisInicial = parametros.get("pais");
+
+        // Activar el filtro correspondiente
+        if (paisInicial) {
+            const filtroInicial = Array.from(filtros).find(function(filtro) {
+                return filtro.dataset.pais === paisInicial;
+            });
+
+            if (filtroInicial) {
+                filtroInicial.click();
+            }
+        }
     </script>
 
 </body>
