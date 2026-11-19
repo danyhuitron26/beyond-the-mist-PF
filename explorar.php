@@ -116,7 +116,7 @@ $imagenesPais = [
             </div>
 
             
-            
+            <!-- 5ºB modificación-->
             <!-- Historias obtenidas desde SQLite
                  Con esto, PHP recorrerá todas las historias que encontró en SQLite y generará una tarjeta por cada una. -->
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
