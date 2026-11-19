@@ -18,5 +18,17 @@ $sql = "CREATE TABLE IF NOT EXISTS contenido (
 // Ejecutar la instrucción
 $bd->exec($sql);
 
-echo "Base de datos y tabla de contenido creadas correctamente.";
+// 6ºC modificado
+// Crear tabla de usuarios
+$sqlUsuarios = "CREATE TABLE IF NOT EXISTS usuarios (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nombre TEXT NOT NULL,
+    correo TEXT NOT NULL UNIQUE,
+    contrasena TEXT NOT NULL,
+    fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP
+)";
+
+$bd->exec($sqlUsuarios);
+
+echo "Base de datos, tabla de contenido y tabla de usuarios creadas correctamente.";
 ?>

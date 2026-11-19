@@ -237,6 +237,7 @@ $imagenesPais = [
 
         });
 
+        // 6ºB modificación (para que en index lleve a países con filtros aplicados)
         // Revisar si se seleccionó un país desde la página de inicio
         const parametros = new URLSearchParams(window.location.search);
         const paisInicial = parametros.get("pais");
