@@ -11546,3 +11546,81 @@ section#contact form#contactForm :-ms-input-placeholder {
         height: 40px;
     }
 }
+
+
+/* 7ºA modificación */
+/* Página de registro */
+.registro-section {
+    min-height: 100vh;
+    padding: 150px 0 80px;
+    background-color: #F5F3ED;
+}
+
+.registro-card {
+    max-width: 550px;
+    margin: 0 auto;
+    padding: 40px;
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.12);
+}
+
+.registro-card h2 {
+    color: #263B36;
+    font-weight: 700;
+}
+
+.registro-card p {
+    color: #555555;
+    line-height: 1.6;
+}
+
+.registro-card .form-label {
+    color: #263B36;
+    font-weight: 600;
+}
+
+.registro-card .form-control {
+    padding: 12px;
+    border: 1px solid #D7D9D2;
+}
+
+.registro-card .form-control:focus {
+    border-color: #697C74;
+    box-shadow: 0 0 0 0.2rem rgba(105, 124, 116, 0.2);
+}
+
+.btn-registro {
+    padding: 12px;
+    background-color: #263B36;
+    border: 1px solid #263B36;
+    color: #FFFFFF;
+    font-weight: 600;
+}
+
+.btn-registro:hover {
+    background-color: #B89A65;
+    border-color: #B89A65;
+    color: #263B36;
+}
+
+.registro-card a {
+    color: #697C74;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.registro-card a:hover {
+    color: #B89A65;
+}
+
+/* Ajustes para pantallas pequeñas */
+@media (max-width: 576px) {
+    .registro-card {
+        padding: 25px;
+    }
+
+    .registro-section {
+        padding: 120px 0 60px;
+    }
+}
