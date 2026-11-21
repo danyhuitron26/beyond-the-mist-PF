@@ -11700,3 +11700,112 @@ section#contact form#contactForm :-ms-input-placeholder {
         padding: 120px 0 60px;
     }
 }
+
+/* 9ºA modificado */
+/* SECCIÓN DE COLECCIONES */
+
+.colecciones-section {
+    min-height: 100vh;
+    padding: 150px 0 80px;
+    background-color: #F5F3ED;
+}
+
+.titulo-colecciones {
+    color: #263B36;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.colecciones-section .text-center p {
+    color: #555;
+}
+
+.formulario-coleccion {
+    max-width: 750px;
+    margin: 0 auto;
+    padding: 35px;
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    box-shadow: 0 3px 15px rgba(0,0,0,.10);
+}
+
+.formulario-coleccion h4 {
+    color: #263B36;
+    font-weight: 700;
+    margin-bottom: 25px;
+}
+
+.formulario-coleccion .form-label {
+    color: #263B36;
+    font-weight: 600;
+}
+
+.formulario-coleccion .form-control {
+    padding: 12px;
+    border: 1px solid #D7D9D2;
+}
+
+.formulario-coleccion .form-control:focus {
+    border-color: #697C74;
+    box-shadow: 0 0 0 .2rem rgba(105,124,116,.2);
+}
+
+.btn-coleccion {
+    background-color: #263B36;
+    border: 1px solid #263B36;
+    color: #FFFFFF;
+    padding: 11px 22px;
+    font-weight: 600;
+}
+
+.btn-coleccion:hover {
+    background-color: #B89A65;
+    border-color: #B89A65;
+    color: #263B36;
+}
+
+.titulo-lista-colecciones {
+    color: #263B36;
+    font-weight: 700;
+}
+
+.tarjeta-coleccion {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 3px 12px rgba(0,0,0,.08);
+}
+
+.tarjeta-coleccion .card-body {
+    padding: 25px;
+}
+
+.tarjeta-coleccion .card-title {
+    color: #263B36;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.tarjeta-coleccion .card-text {
+    color: #555;
+    line-height: 1.6;
+}
+
+.tarjeta-coleccion small {
+    color: #697C74;
+}
+
+.mensaje-vacio {
+    padding: 35px;
+    background-color: #FFFFFF;
+    border-radius: 8px;
+}
+
+@media (max-width: 576px) {
+    .formulario-coleccion {
+        padding: 25px;
+    }
+
+    .colecciones-section {
+        padding: 120px 0 60px;
+    }
+}
