@@ -56,7 +56,7 @@ $imagenesPais = [
                 aria-controls="navbarResponsive"
                 aria-expanded="false"
                 aria-label="Toggle navigation">
-                Menu <i class="fas fa-bars ms-1"></i>
+                Menú <i class="fas fa-bars ms-1"></i>
             </button>
 
             <div class="collapse navbar-collapse" id="navbarResponsive">
