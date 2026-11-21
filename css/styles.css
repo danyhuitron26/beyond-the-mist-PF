@@ -11809,3 +11809,80 @@ section#contact form#contactForm :-ms-input-placeholder {
         padding: 120px 0 60px;
     }
 }
+
+/* Imágenes de historias dentro de las colecciones */
+.colecciones-section .historia-imagen {
+    display: block;
+    width: 100%;
+    height: 230px;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* 6ºD modificación */
+/* Sección para guardar historias */
+.guardar-historia {
+    max-width: 650px;
+    margin: 55px auto 0;
+    padding: 25px 30px;
+    background-color: #FFFFFF;
+    border-top: 3px solid #B89A65;
+    border-radius: 8px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.10);
+}
+
+.guardar-historia h4 {
+    color: #263B36;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.guardar-historia p {
+    color: #555555;
+    margin-bottom: 0;
+    line-height: 1.6;
+}
+
+.guardar-historia a {
+    color: #697C74;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.guardar-historia a:hover {
+    color: #B89A65;
+}
+
+/* 9ºB modificación */
+/* Distribución uniforme de las tarjetas de colecciones */
+
+.tarjeta-coleccion .descripcion-coleccion {
+    min-height: 3.2em;
+}
+
+/* Botones alineados en la parte inferior */
+.tarjeta-coleccion .acciones-coleccion {
+    margin-top: auto;
+    align-items: stretch;
+}
+
+/* Los enlaces y el formulario ocupan el mismo espacio */
+.acciones-coleccion > a,
+.acciones-coleccion > form {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Botones con el mismo ancho y altura */
+.acciones-coleccion .btn {
+    width: 100%;
+    height: 100%;
+    padding: 8px 4px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+
+/* El formulario de eliminar */
+.form-eliminar-coleccion {
+    display: flex;
+}

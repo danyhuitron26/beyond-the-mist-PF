@@ -226,12 +226,19 @@ if (isset($_SESSION['usuario_id'])) {
 
                     </div>
 
+
                 <?php else: ?>
 
-                    <p class="mt-5">
-                        <a href="login.php">Inicia sesión</a>
-                        para guardar esta historia en tus colecciones.
-                    </p>
+                    <div class="guardar-historia invitacion-login mt-5">
+
+                        <h4>¿Te gustaría guardar esta historia?</h4>
+
+                        <p>
+                            <a href="login.php">Inicia sesión</a>
+                            para añadirla a tus colecciones personales.
+                        </p>
+
+                    </div>
 
                 <?php endif; ?>
 

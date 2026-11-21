@@ -50,15 +50,21 @@ $historias = $consultaHistorias->fetchAll(PDO::FETCH_ASSOC);
 <!DOCTYPE html>
 <html lang="es">
 
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title><?= htmlspecialchars($coleccion['nombre']) ?> | Beyond the Mist</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="assets/espiralcelta.png" />
 
-    <link href="css/styles.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" />
+
+    <link href="css/styles.css" rel="stylesheet" />
 </head>
 
 <body>
@@ -156,7 +162,7 @@ $historias = $consultaHistorias->fetchAll(PDO::FETCH_ASSOC);
 
                         <div class="col">
 
-                            <div class="card h-100">
+                            <div class="card historia-card h-100">
 
                                 <img
                                     src="<?= htmlspecialchars($historia['imagen']) ?>"
@@ -264,6 +270,7 @@ $historias = $consultaHistorias->fetchAll(PDO::FETCH_ASSOC);
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/scripts.js"></script>
 
 </body>
 </html>

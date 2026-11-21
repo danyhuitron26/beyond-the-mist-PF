@@ -56,16 +56,23 @@ $colecciones = $consulta->fetchAll(PDO::FETCH_ASSOC);
 <!DOCTYPE html>
 <html lang="es">
 
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Mis colecciones | Beyond the Mist</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="assets/espiralcelta.png" />
 
-    <link href="css/styles.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" />
+
+    <link href="css/styles.css" rel="stylesheet" />
 </head>
+
 
 <body>
 
@@ -223,13 +230,13 @@ $colecciones = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
                                 <div class="card tarjeta-coleccion h-100">
 
-                                    <div class="card-body">
+                                    <div class="card-body d-flex flex-column">
 
                                         <h5 class="card-title">
                                             <?= htmlspecialchars($coleccion['nombre']) ?>
                                         </h5>
 
-                                        <p class="card-text">
+                                        <p class="card-text descripcion-coleccion">
                                             <?= htmlspecialchars($coleccion['descripcion'] ?? '') ?>
                                         </p>
 
@@ -240,7 +247,7 @@ $colecciones = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
 
 
-                                        <div class="mt-4 d-flex gap-2">
+                                        <div class="acciones-coleccion mt-auto d-flex gap-2">
 
                                             <a
                                                 href="ver_coleccion.php?id=<?= $coleccion['id'] ?>"
@@ -257,6 +264,7 @@ $colecciones = $consulta->fetchAll(PDO::FETCH_ASSOC);
                                             </a>
 
                                             <form
+                                                class="form-eliminar-coleccion"
                                                 action="eliminar_coleccion.php"
                                                 method="POST"
                                                 onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta colección?');"
@@ -267,7 +275,7 @@ $colecciones = $consulta->fetchAll(PDO::FETCH_ASSOC);
                                                     value="<?= $coleccion['id'] ?>"
                                                 >
 
-                                                <button type="submit" class="btn btn-sm btn-danger">
+                                                <button type="submit" class="btn btn-sm btn-danger btn-eliminar-coleccion">
                                                     Eliminar
                                                 </button>
                                             </form>
@@ -315,6 +323,7 @@ $colecciones = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/scripts.js"></script>
 
 </body>
 </html>
