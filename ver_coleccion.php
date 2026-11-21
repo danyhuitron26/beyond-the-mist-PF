@@ -119,6 +119,14 @@ $historias = $consultaHistorias->fetchAll(PDO::FETCH_ASSOC);
 
             </div>
 
+            <?php if (isset($_GET['quitada'])): ?>
+
+                <div class="alert alert-success text-center">
+                    La historia se quitó de tu colección correctamente.
+                </div>
+
+            <?php endif; ?>
+
 
             <div class="text-center mb-5">
 
@@ -172,12 +180,39 @@ $historias = $consultaHistorias->fetchAll(PDO::FETCH_ASSOC);
                                         <?= htmlspecialchars($historia['descripcion']) ?>
                                     </p>
 
+                                    
+                                    
                                     <a
                                         href="historia.php?id=<?= $historia['id'] ?>"
                                         class="btn btn-historia mt-auto"
                                     >
                                         Leer historia
                                     </a>
+
+                                    <form
+                                        action="quitar_historia.php"
+                                        method="POST"
+                                        class="mt-2"
+                                        onsubmit="return confirm('¿Deseas quitar esta historia de la colección?');"
+                                    >
+
+                                        <input
+                                            type="hidden"
+                                            name="coleccion_id"
+                                            value="<?= $coleccion['id'] ?>"
+                                        >
+
+                                        <input
+                                            type="hidden"
+                                            name="contenido_id"
+                                            value="<?= $historia['id'] ?>"
+                                        >
+
+                                        <button type="submit" class="btn btn-outline-danger w-100">
+                                            Quitar de la colección
+                                        </button>
+
+                                    </form>
 
                                 </div>
 
