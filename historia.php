@@ -16,6 +16,22 @@ if ($id) {
     $consulta->execute([$id]);
     $historia = $consulta->fetch(PDO::FETCH_ASSOC);
 }
+
+// Sirve para recuperar las colecciones del usuario
+$colecciones = [];
+
+if (isset($_SESSION['usuario_id'])) {
+
+    $consultaColecciones = $bd->prepare(
+        "SELECT * FROM colecciones
+         WHERE usuario_id = ?
+         ORDER BY nombre ASC"
+    );
+
+    $consultaColecciones->execute([$_SESSION['usuario_id']]);
+
+    $colecciones = $consultaColecciones->fetchAll(PDO::FETCH_ASSOC);
+}
 ?>
 
 <!DOCTYPE html>
@@ -140,6 +156,83 @@ if ($id) {
                         <h4>Para descubrir más</h4>
                         <p><?= nl2br(htmlspecialchars($historia['fuentes'])) ?></p>
                     </div>
+                <?php endif; ?>
+
+
+
+                <?php if (isset($_SESSION['usuario_id'])): ?>
+
+                    <div class="guardar-historia mt-5">
+
+                        <h4>Guardar en una colección</h4>
+
+                        <?php if (isset($_GET['guardada'])): ?>
+                            <div class="alert alert-success">
+                                ¡Historia guardada correctamente!
+                            </div>
+                        <?php endif; ?>
+
+                        <?php if (count($colecciones) > 0): ?>
+
+                            <form action="guardar_coleccion.php" method="POST">
+
+                                <input
+                                    type="hidden"
+                                    name="contenido_id"
+                                    value="<?= $historia['id'] ?>"
+                                >
+
+                                <div class="mb-3">
+
+                                    <label for="coleccion_id" class="form-label">
+                                        Selecciona una colección:
+                                    </label>
+
+                                    <select
+                                        name="coleccion_id"
+                                        id="coleccion_id"
+                                        class="form-select"
+                                        required
+                                    >
+
+                                        <option value="">Elige una colección</option>
+
+                                        <?php foreach ($colecciones as $coleccion): ?>
+
+                                            <option value="<?= $coleccion['id'] ?>">
+                                                <?= htmlspecialchars($coleccion['nombre']) ?>
+                                            </option>
+
+                                        <?php endforeach; ?>
+
+                                    </select>
+
+                                </div>
+
+                                <button type="submit" class="btn btn-historia">
+                                    Guardar historia
+                                </button>
+
+                            </form>
+
+                        <?php else: ?>
+
+                            <p>
+                                Todavía no tienes colecciones.
+                                <a href="colecciones.php">Crea tu primera colección aquí.</a>
+                            </p>
+
+                        <?php endif; ?>
+
+                    </div>
+
+                <?php else: ?>
+
+                    <p class="mt-5">
+                        <a href="login.php">Inicia sesión</a>
+                        para guardar esta historia en tus colecciones.
+                    </p>
+
                 <?php endif; ?>
 
                 <div class="text-center mt-5">
