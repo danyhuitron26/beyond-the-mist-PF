@@ -243,6 +243,13 @@ $colecciones = $consulta->fetchAll(PDO::FETCH_ASSOC);
                                         <div class="mt-4 d-flex gap-2">
 
                                             <a
+                                                href="ver_coleccion.php?id=<?= $coleccion['id'] ?>"
+                                                class="btn btn-sm btn-coleccion"
+                                            >
+                                                Ver colección
+                                            </a>
+
+                                            <a
                                                 href="editar_coleccion.php?id=<?= $coleccion['id'] ?>"
                                                 class="btn btn-sm btn-volver"
                                             >
