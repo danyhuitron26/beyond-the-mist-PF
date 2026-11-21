@@ -1,5 +1,8 @@
 <?php
 // 6º Archivo creado
+
+session_start();
+
 require_once __DIR__ . '/conexion.php';
 
 // Obtener el ID de la historia desde la URL
@@ -56,11 +59,29 @@ if ($id) {
                     <li class="nav-item">
                         <a class="nav-link" href="index.php">Inicio</a>
                     </li>
+
                     <li class="nav-item">
                         <a class="nav-link" href="explorar.php">Explorar</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="login.php">Entrar</a>
+
+                    <?php if (isset($_SESSION['usuario_id'])): ?>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="colecciones.php">Mis colecciones</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="logout.php">Cerrar sesión</a>
+                        </li>
+
+                    <?php else: ?>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="login.php">Entrar</a>
+                        </li>
+
+                    <?php endif; ?>
+
                     </li>
                 </ul>
             </div>

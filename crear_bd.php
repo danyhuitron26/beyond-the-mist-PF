@@ -30,5 +30,29 @@ $sqlUsuarios = "CREATE TABLE IF NOT EXISTS usuarios (
 
 $bd->exec($sqlUsuarios);
 
+// Tabla de colecciones
+$sqlColecciones = "CREATE TABLE IF NOT EXISTS colecciones (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    usuario_id INTEGER NOT NULL,
+    nombre TEXT NOT NULL,
+    descripcion TEXT,
+    fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+)";
+$bd->exec($sqlColecciones);
+
+
+// Tabla que relaciona colecciones con historias
+$sqlColeccionContenido = "CREATE TABLE IF NOT EXISTS coleccion_contenido (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    coleccion_id INTEGER NOT NULL,
+    contenido_id INTEGER NOT NULL,
+    fecha_guardado DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (coleccion_id, contenido_id),
+    FOREIGN KEY (coleccion_id) REFERENCES colecciones(id) ON DELETE CASCADE,
+    FOREIGN KEY (contenido_id) REFERENCES contenido(id) ON DELETE CASCADE
+)";
+$bd->exec($sqlColeccionContenido);
+
 echo "Base de datos, tabla de contenido y tabla de usuarios creadas correctamente.";
 ?>
