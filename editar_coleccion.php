@@ -2,6 +2,7 @@
 // 10º Archivo modificado
 session_start();
 
+// Comprueba que el usuario haya iniciado sesión
 if (!isset($_SESSION['usuario_id'])) {
     header("Location: login.php");
     exit;
@@ -11,32 +12,39 @@ require_once __DIR__ . '/conexion.php';
 
 $errores = [];
 
+// Obtiene el ID de la colección desde la URL y valida que sea un número entero
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
+// Si no se recibe un ID válido, regresa a la página de colecciones
 if (!$id) {
     header("Location: colecciones.php");
     exit;
 }
 
-// Buscar la colección y comprobar que pertenezca al usuario
+// Busca la colección y comprueba que pertenezca al usuario
 $consulta = $bd->prepare(
     "SELECT * FROM colecciones
      WHERE id = ? AND usuario_id = ?"
 );
 
+// Ejecuta la consulta con el ID de la colección y el ID del usuario
 $consulta->execute([$id, $_SESSION['usuario_id']]);
+// Obtiene los datos de la colección encontrada
 $coleccion = $consulta->fetch(PDO::FETCH_ASSOC);
 
+// Si no existe la colección o no pertenece al usuario, regresa a colecciones
 if (!$coleccion) {
     header("Location: colecciones.php");
     exit;
 }
 
+// Colocar los datos actuales en las variables para mostrarlos en el formulario
 $nombre = $coleccion['nombre'];
 $descripcion = $coleccion['descripcion'];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
+    // Obtiene los nuevos datos y elimina espacios al inicio y al final
     $nombre = trim($_POST['nombre']);
     $descripcion = trim($_POST['descripcion']);
 
@@ -44,14 +52,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errores[] = "El nombre de la colección es obligatorio.";
     }
 
+    // Si no hay errores, actualiza la colección
     if (empty($errores)) {
 
+        // Prepara la consulta SQL para modificar los datos
         $consulta = $bd->prepare(
             "UPDATE colecciones
              SET nombre = ?, descripcion = ?
              WHERE id = ? AND usuario_id = ?"
         );
 
+        // Ejecuta la actualización con los nuevos datos
         $consulta->execute([
             $nombre,
             $descripcion,
@@ -59,6 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['usuario_id']
         ]);
 
+        // Regresa a colecciones.php mostrando el mensaje de éxito
         header("Location: colecciones.php?editada=1");
         exit;
     }
@@ -87,6 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <body>
 
+    <!-- Sección para editar la colección -->
     <section class="colecciones-section">
 
         <div class="container">
@@ -95,6 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 <h2 class="titulo-colecciones mb-4">Editar colección</h2>
 
+                <!-- Muestra los errores de validación, si existen -->
                 <?php if (!empty($errores)): ?>
                     <div class="alert alert-danger">
                         <?php foreach ($errores as $error): ?>
@@ -105,6 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </div>
                 <?php endif; ?>
 
+                <!-- Formulario para modificar los datos -->
                 <form method="POST">
 
                     <div class="mb-3">

@@ -1,54 +1,69 @@
 <?php
 // 9º Archivo creado
+// Inicia o recupera la sesión del usuario
 session_start();
 
-// Comprobar que el usuario haya iniciado sesión
+// Comprueba que el usuario haya iniciado sesión
+// Si no existe su ID en la sesión, se redirige al login
 if (!isset($_SESSION['usuario_id'])) {
     header("Location: login.php");
     exit;
 }
 
+// Incluye el archivo de conexión con SQLite
 require_once __DIR__ . '/conexion.php';
 
+// Variables iniciales
 $errores = [];
 $nombre = "";
 $descripcion = "";
 
-// Crear una nueva colección
+// Crea una nueva colección
+// Comprueba si se envió el formulario mediante POST
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
+    // Recupera los datos enviados desde el formulario
     $nombre = trim($_POST['nombre']);
     $descripcion = trim($_POST['descripcion']);
 
+    // Comprueba que el nombre de la colección no esté vacío
     if (empty($nombre)) {
         $errores[] = "El nombre de la colección es obligatorio.";
     }
 
+    // Inserta la colección solamente si no existen errores
     if (empty($errores)) {
 
+        // Prepara la instrucción SQL para crear la colección
         $consulta = $bd->prepare(
             "INSERT INTO colecciones (usuario_id, nombre, descripcion)
              VALUES (?, ?, ?)"
         );
 
+        // Ejecuta la consulta con los datos correspondientes
+        // Se utiliza el ID del usuario que inició sesión
         $consulta->execute([
             $_SESSION['usuario_id'],
             $nombre,
             $descripcion
         ]);
 
+        // Redirige a colecciones indicando que se creó una colección
         header("Location: colecciones.php?creada=1");
         exit;
     }
 }
 
-// Obtener las colecciones del usuario actual
+// CONSULTA LAS COLECCIONES DEL USUARIO ACTUAL
+
+// Prepara una consulta para recuperar únicamente las colecciones que pertenecen al usuario que inició sesión
 $consulta = $bd->prepare(
     "SELECT * FROM colecciones
      WHERE usuario_id = ?
      ORDER BY fecha_creacion DESC"
 );
 
+// Ejecuta la consulta utilizando el ID del usuario actual
 $consulta->execute([$_SESSION['usuario_id']]);
 $colecciones = $consulta->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -84,6 +99,7 @@ $colecciones = $consulta->fetchAll(PDO::FETCH_ASSOC);
                 <img src="assets/img/masthead/logo.png" alt="Beyond the Mist">
             </a>
 
+            <!-- Botón para desplegar el menú en pantallas pequeñas -->
             <button class="navbar-toggler" type="button"
                 data-bs-toggle="collapse" data-bs-target="#navbarResponsive">
                 Menú
@@ -115,11 +131,12 @@ $colecciones = $consulta->fetchAll(PDO::FETCH_ASSOC);
     </nav>
 
 
-    <!-- Mis colecciones -->
+    <!-- SECCIÓN PRINCIPAL DE COLECCIONES -->
     <section class="colecciones-section">
 
         <div class="container">
 
+            <!-- Título y descripción de la sección -->
             <div class="text-center mb-5">
                 <h2 class="titulo-colecciones">Mis colecciones</h2>
 
@@ -131,6 +148,7 @@ $colecciones = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
 
             <!-- Mensajes de éxito -->
+            <!-- Se muestran según el parámetro recibido en la URL -->
             <?php if (isset($_GET['creada'])): ?>
 
                 <div class="alert alert-success text-center">
@@ -157,6 +175,7 @@ $colecciones = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
                 <h4>Nueva colección</h4>
 
+                <!-- Mostrar los errores de validación, si existen -->
                 <?php if (!empty($errores)): ?>
 
                     <div class="alert alert-danger">
@@ -170,6 +189,7 @@ $colecciones = $consulta->fetchAll(PDO::FETCH_ASSOC);
                 <?php endif; ?>
 
 
+                <!-- Formulario que envía los datos a este mismo archivo -->
                 <form method="POST" action="colecciones.php">
 
                     <div class="mb-3">
@@ -213,17 +233,20 @@ $colecciones = $consulta->fetchAll(PDO::FETCH_ASSOC);
             </div>
 
 
-            <!-- Colecciones existentes -->
+            <!-- Listado de colecciones existentes -->
             <div class="mt-5">
 
                 <h3 class="titulo-lista-colecciones mb-4">
                     Mis colecciones creadas
                 </h3>
 
+                <!-- Comprueba si el usuario tiene colecciones -->
                 <?php if (count($colecciones) > 0): ?>
 
+                    <!-- Distribución de las tarjetas -->
                     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
 
+                    <!-- Recorre las colecciones del usuario -->
                         <?php foreach ($colecciones as $coleccion): ?>
 
                             <div class="col">
@@ -246,7 +269,7 @@ $colecciones = $consulta->fetchAll(PDO::FETCH_ASSOC);
                                         </small>
 
 
-
+                                        <!-- ACCIONES DISPONIBLES PARA CADA COLECCIÓN -->
                                         <div class="acciones-coleccion mt-auto d-flex gap-2">
 
                                             <a
@@ -263,12 +286,14 @@ $colecciones = $consulta->fetchAll(PDO::FETCH_ASSOC);
                                                 Editar
                                             </a>
 
+                                            <!-- Formulario para eliminar la colección -->
                                             <form
                                                 class="form-eliminar-coleccion"
                                                 action="eliminar_coleccion.php"
                                                 method="POST"
                                                 onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta colección?');"
                                             >
+                                                <!-- Envia el ID de la colección que se eliminará -->
                                                 <input
                                                     type="hidden"
                                                     name="id"
@@ -294,6 +319,7 @@ $colecciones = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
                 <?php else: ?>
 
+                    <!-- Mensaje que aparece si el usuario todavía no tiene colecciones -->
                     <div class="mensaje-vacio text-center">
                         <p>
                             Todavía no tienes colecciones.

@@ -1,9 +1,11 @@
 <?php
 // 3º Archivo creado
-// Crear o conectar con la base de datos
+// CREACIÓN O CONEXIÓN CON LA BASE DE DATOS
+// Si el archivo no existe, SQLite lo crea automáticamente.
 $bd = new PDO('sqlite:' . __DIR__ . '/beyond_the_mist.db');
 
-// Crear la tabla de contenido
+// TABLA CONTENIDO
+// Almacena las historias que aparecen en el catálogo.
 $sql = "CREATE TABLE IF NOT EXISTS contenido (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     titulo TEXT NOT NULL,
@@ -15,11 +17,12 @@ $sql = "CREATE TABLE IF NOT EXISTS contenido (
     fuentes TEXT
 )";
 
-// Ejecutar la instrucción
+// Ejecuta la instrucción SQL
 $bd->exec($sql);
 
 // 6ºC modificado
-// Crear tabla de usuarios
+// TABLA USUARIOS
+// Almacena la información de las personas registradas.
 $sqlUsuarios = "CREATE TABLE IF NOT EXISTS usuarios (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nombre TEXT NOT NULL,
@@ -30,7 +33,8 @@ $sqlUsuarios = "CREATE TABLE IF NOT EXISTS usuarios (
 
 $bd->exec($sqlUsuarios);
 
-// Tabla de colecciones
+// TABLA COLECCIONES
+// Almacena las colecciones personales de cada usuario.
 $sqlColecciones = "CREATE TABLE IF NOT EXISTS colecciones (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     usuario_id INTEGER NOT NULL,
@@ -39,10 +43,12 @@ $sqlColecciones = "CREATE TABLE IF NOT EXISTS colecciones (
     fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
 )";
+
 $bd->exec($sqlColecciones);
 
 
-// Tabla que relaciona colecciones con historias
+// TABLA COLECCION_CONTENIDO
+// Relaciona las colecciones con las historias guardadas en ellas.
 $sqlColeccionContenido = "CREATE TABLE IF NOT EXISTS coleccion_contenido (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     coleccion_id INTEGER NOT NULL,
@@ -54,5 +60,6 @@ $sqlColeccionContenido = "CREATE TABLE IF NOT EXISTS coleccion_contenido (
 )";
 $bd->exec($sqlColeccionContenido);
 
-echo "Base de datos, tabla de contenido y tabla de usuarios creadas correctamente.";
+// Muestra un mensaje cuando termina la creación de las tablas.
+echo "Base de datos y sus cuatro tablas creadas correctamente.";
 ?>

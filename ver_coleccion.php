@@ -9,29 +9,33 @@ if (!isset($_SESSION['usuario_id'])) {
 
 require_once __DIR__ . '/conexion.php';
 
-// Obtener el ID de la colección
+// Obtiene el ID de la colección desde la URL y validarlo
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
+// Si no se recibe un ID válido, regresa a las colecciones
 if (!$id) {
     header("Location: colecciones.php");
     exit;
 }
 
-// Buscar la colección y comprobar que pertenezca al usuario
+// Busca la colección y comprueba que pertenezca al usuario
 $consulta = $bd->prepare(
     "SELECT * FROM colecciones
      WHERE id = ? AND usuario_id = ?"
 );
 
+// Ejecuta la consulta con el ID de la colección y el usuario
 $consulta->execute([$id, $_SESSION['usuario_id']]);
+// Obtiene los datos de la colección
 $coleccion = $consulta->fetch(PDO::FETCH_ASSOC);
 
+// Si la colección no existe o no pertenece al usuario, regresa
 if (!$coleccion) {
     header("Location: colecciones.php");
     exit;
 }
 
-// Obtener las historias guardadas en esa colección
+// Obtiene las historias guardadas en esa colección
 //      La función de INNER JOIN es relacionar la tabla contenido con coleccion_contenido para recuperar únicamente
 //      las historias que pertenecen a la colección seleccionada.
 $consultaHistorias = $bd->prepare(
@@ -43,7 +47,9 @@ $consultaHistorias = $bd->prepare(
      ORDER BY coleccion_contenido.fecha_guardado DESC"
 );
 
+// Ejecuta la consulta utilizando el ID de la colección
 $consultaHistorias->execute([$id]);
+// Recupera todas las historias encontradas
 $historias = $consultaHistorias->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
@@ -55,6 +61,7 @@ $historias = $consultaHistorias->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+    <!-- Muestra el nombre de la colección en el título de la pestaña -->
     <title><?= htmlspecialchars($coleccion['nombre']) ?> | Beyond the Mist</title>
 
     <link rel="icon" type="image/png" href="assets/espiralcelta.png" />
@@ -123,12 +130,14 @@ $historias = $consultaHistorias->fetchAll(PDO::FETCH_ASSOC);
 
             <div class="mb-4">
 
+            <!-- Enlace para regresar a la lista de colecciones -->
                 <a href="colecciones.php" class="volver-explorar">
                     ← Volver a mis colecciones
                 </a>
 
             </div>
 
+            <!-- Mostrar un mensaje cuando se haya quitado una historia -->
             <?php if (isset($_GET['quitada'])): ?>
 
                 <div class="alert alert-success text-center">
@@ -140,14 +149,17 @@ $historias = $consultaHistorias->fetchAll(PDO::FETCH_ASSOC);
 
             <div class="text-center mb-5">
 
+                <!-- Muestra el nombre de la colección -->
                 <h2 class="titulo-colecciones">
                     <?= htmlspecialchars($coleccion['nombre']) ?>
                 </h2>
 
+                <!-- Muestra la descripción de la colección -->
                 <p>
                     <?= htmlspecialchars($coleccion['descripcion'] ?? '') ?>
                 </p>
 
+                <!-- Muestra la cantidad de historias guardadas -->
                 <p>
                     <strong>
                         <?= count($historias) ?>
@@ -158,16 +170,20 @@ $historias = $consultaHistorias->fetchAll(PDO::FETCH_ASSOC);
             </div>
 
 
+            <!-- Comprueba si la colección tiene historias guardadas -->
             <?php if (count($historias) > 0): ?>
 
+                <!-- Distribuye las tarjetas en columnas adaptables -->
                 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
 
+                <!-- Recorre todas las historias de la colección -->
                     <?php foreach ($historias as $historia): ?>
 
                         <div class="col">
 
                             <div class="card historia-card h-100">
 
+                                <!-- Muestra la imagen de la historia -->
                                 <img
                                     src="<?= htmlspecialchars($historia['imagen']) ?>"
                                     class="card-img-top historia-imagen"
@@ -176,22 +192,25 @@ $historias = $consultaHistorias->fetchAll(PDO::FETCH_ASSOC);
 
                                 <div class="card-body d-flex flex-column">
 
+                                    <!-- Muestra el país y la categoría -->
                                     <small class="text-muted mb-2">
                                         <?= htmlspecialchars($historia['pais']) ?>
                                         ·
                                         <?= htmlspecialchars($historia['categoria']) ?>
                                     </small>
 
+                                    <!-- Muestra el título -->
                                     <h5 class="card-title">
                                         <?= htmlspecialchars($historia['titulo']) ?>
                                     </h5>
 
+                                    <!-- Muestra la descripción -->
                                     <p class="card-text">
                                         <?= htmlspecialchars($historia['descripcion']) ?>
                                     </p>
 
                                     
-                                    
+                                    <!-- Enlace para consultar la historia completa -->
                                     <a
                                         href="historia.php?id=<?= $historia['id'] ?>"
                                         class="btn btn-historia mt-auto"
@@ -199,6 +218,7 @@ $historias = $consultaHistorias->fetchAll(PDO::FETCH_ASSOC);
                                         Leer historia
                                     </a>
 
+                                    <!-- Formulario para quitar la historia de esta colección -->
                                     <form
                                         action="quitar_historia.php"
                                         method="POST"
@@ -206,18 +226,21 @@ $historias = $consultaHistorias->fetchAll(PDO::FETCH_ASSOC);
                                         onsubmit="return confirm('¿Deseas quitar esta historia de la colección?');"
                                     >
 
+                                        <!-- Enviar el ID de la colección -->
                                         <input
                                             type="hidden"
                                             name="coleccion_id"
                                             value="<?= $coleccion['id'] ?>"
                                         >
 
+                                        <!-- Enviar el ID de la historia -->
                                         <input
                                             type="hidden"
                                             name="contenido_id"
                                             value="<?= $historia['id'] ?>"
                                         >
 
+                                        <!-- Botón para ejecutar la acción -->
                                         <button type="submit" class="btn btn-outline-danger w-100">
                                             Quitar de la colección
                                         </button>
@@ -236,6 +259,7 @@ $historias = $consultaHistorias->fetchAll(PDO::FETCH_ASSOC);
 
             <?php else: ?>
 
+                <!-- Mensaje que aparece cuando la colección está vacía -->
                 <div class="mensaje-vacio text-center">
 
                     <h4>Esta colección todavía está vacía</h4>

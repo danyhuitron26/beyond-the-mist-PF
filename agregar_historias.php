@@ -2,9 +2,12 @@
 // 4º Archivo creado 
 // Conectar con la base de datos
 $bd = new PDO('sqlite:' . __DIR__ . '/beyond_the_mist.db');
+
+// Configura PDO para mostrar errores cuando ocurra un problema
 $bd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 // Historias que se guardarán en la base de datos
+// Cada arreglo contiene los datos de una historia
 $historias = [
 
     // IRLANDA
@@ -102,6 +105,7 @@ $historias = [
 ];
 
 // Preparar la instrucción para insertar una historia
+// Solo inserta el registro si no existe otro con el mismo título y país.
 $sql = "INSERT INTO contenido
         (titulo, pais, categoria, descripcion, historia, imagen, fuentes)
         SELECT ?, ?, ?, ?, ?, ?, ?
@@ -110,13 +114,16 @@ $sql = "INSERT INTO contenido
             WHERE titulo = ? AND pais = ?
         )";
 
+// Prepara la consulta para poder ejecutarla con los datos de cada historia
 $consulta = $bd->prepare($sql);
 
+// CONTADORES PARA SABER CUÁNTAS HISTORIAS SE INSERTARON O YA EXISTÍAN
 $insertadas = 0;
 $existentes = 0;
 
 // Recorrer e insertar las historias
 foreach ($historias as $historia) {
+     // Ejecuta la consulta preparada y le proporciona los valores que sustituirán a los signos ?
     $consulta->execute([
         $historia[0],
         $historia[1],
@@ -129,6 +136,7 @@ foreach ($historias as $historia) {
         $historia[1]
     ]);
 
+    // Comprueba si se insertó un nuevo registro
     if ($consulta->rowCount() > 0) {
         $insertadas++;
     } else {
@@ -136,6 +144,7 @@ foreach ($historias as $historia) {
     }
 }
 
+// Muestra el resultado del proceso
 echo "Proceso terminado.<br>";
 echo "Historias agregadas: " . $insertadas . "<br>";
 echo "Historias que ya existían: " . $existentes;

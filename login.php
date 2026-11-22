@@ -1,5 +1,6 @@
 <?php
 // 8º Archivo creado
+// Iniciar o recuperar la sesión del usuario
 session_start();
 
 require_once __DIR__ . '/conexion.php';
@@ -8,45 +9,48 @@ require_once __DIR__ . '/conexion.php';
 $error = "";
 $correo = "";
 
-// Comprobar si se envió el formulario
+// Comprobar si se envió el formulario mediante POST
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    // Recuperar los datos
+    // Recuperar los datos enviados desde el formulario
     $correo = trim($_POST['correo']);
     $contrasena = $_POST['contrasena'];
 
-    // Validar los campos
+    // Validar que los campos no estén vacíos
     if (empty($correo) || empty($contrasena)) {
-
+        // Guarda mensaje de error
         $error = "Debes completar todos los campos.";
 
     } else {
 
-        // Buscar al usuario por su correo
+        // Busca al usuario por su correo
         $consulta = $bd->prepare(
             "SELECT * FROM usuarios WHERE correo = ?"
         );
-
+        // Ejecuta la consulta utilizando el correo proporcionado
         $consulta->execute([$correo]);
 
+        // Recupera los datos del usuario encontrado
         $usuario = $consulta->fetch(PDO::FETCH_ASSOC);
 
-        // Comprobar la contraseña
+        // Comprueba que el usuario exista y que su contraseña sea correcta
         if ($usuario && password_verify($contrasena, $usuario['contrasena'])) {
 
-            // Crear la sesión del usuario
+            // Crea la sesión del usuario, renueva el identificador de la sesión
             session_regenerate_id(true);
 
+            // Guarda los datos del usuario dentro de la sesión
             $_SESSION['usuario_id'] = $usuario['id'];
             $_SESSION['usuario_nombre'] = $usuario['nombre'];
             $_SESSION['usuario_correo'] = $usuario['correo'];
 
-            // Redirigir al usuario
+            // Redirige al usuario
             header("Location: explorar.php");
+            // Detiene la ejecución del archivo después de la redirección
             exit;
 
         } else {
-
+            // Muestra un mensaje si el correo o la contraseña son incorrectos
             $error = "El correo electrónico o la contraseña son incorrectos.";
 
         }
@@ -126,7 +130,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </p>
                 </div>
 
-                <!-- Mostrar errores -->
+                <!-- Mostrar errores si existen -->
                 <?php if (!empty($error)): ?>
 
                     <div class="alert alert-danger text-center">
@@ -135,9 +139,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 <?php endif; ?>
 
-                <!-- Formulario -->
+                <!-- Formulario para iniciar sesión -->
+                <!-- Los datos se envían a este mismo archivo mediante POST -->
                 <form action="login.php" method="POST">
 
+                    <!-- Campo para ingresar el correo electrónico -->
                     <div class="mb-3">
                         <label for="correo" class="form-label">
                             Correo electrónico
@@ -154,6 +160,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         />
                     </div>
 
+                    <!-- Campo para ingresar la contraseña -->
                     <div class="mb-4">
                         <label for="contrasena" class="form-label">
                             Contraseña
@@ -169,12 +176,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         />
                     </div>
 
+                    <!-- Botón que envía el formulario -->
                     <button type="submit" class="btn btn-login w-100">
                         Iniciar sesión
                     </button>
 
                 </form>
 
+                <!-- Enlace para las personas que todavía no tienen cuenta -->
                 <p class="text-center mt-4 mb-0">
                     ¿Todavía no tienes una cuenta?
                     <a href="registro.php">Regístrate</a>

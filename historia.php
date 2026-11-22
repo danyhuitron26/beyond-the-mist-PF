@@ -8,9 +8,8 @@ require_once __DIR__ . '/conexion.php';
 // Obtener el ID de la historia desde la URL
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
-// Buscar la historia en la base de datos
+// Busca la historia en la base de datos
 $historia = null;
-
 if ($id) {
     $consulta = $bd->prepare("SELECT * FROM contenido WHERE id = ?");
     $consulta->execute([$id]);
@@ -29,7 +28,7 @@ if (isset($_SESSION['usuario_id'])) {
     );
 
     $consultaColecciones->execute([$_SESSION['usuario_id']]);
-
+    // Ejecuta la consulta y recupera todos los resultados.
     $colecciones = $consultaColecciones->fetchAll(PDO::FETCH_ASSOC);
 }
 ?>
@@ -40,6 +39,7 @@ if (isset($_SESSION['usuario_id'])) {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>
+        <!-- Usa PHP para mostrar el título dinámicamente en caso de que no exista -->
         <?= $historia ? htmlspecialchars($historia['titulo']) : 'Historia no encontrada' ?>
         | Beyond the Mist
     </title>
@@ -104,6 +104,7 @@ if (isset($_SESSION['usuario_id'])) {
         </div>
     </nav>
 
+    <!-- Comprobar si existe la historia y elegir su imagen -->
     <?php if ($historia): ?>
 
         <?php
@@ -129,6 +130,7 @@ if (isset($_SESSION['usuario_id'])) {
                     Volver a explorar
                 </a>
 
+                <!-- los datos se recuperan de la base de datos y se insertan en el HTML -->
                 <div class="text-center mt-4">
                     <p class="historia-categoria">
                         <?= htmlspecialchars($historia['pais']) ?>
@@ -151,6 +153,7 @@ if (isset($_SESSION['usuario_id'])) {
                     <?= htmlspecialchars($historia['historia']) ?>
                 </div>
 
+                <!-- comprueba si existen fuentes antes de mostrarlas --> 
                 <?php if (!empty($historia['fuentes'])): ?>
                     <div class="fuentes-historia">
                         <h4>Para descubrir más</h4>
@@ -158,8 +161,8 @@ if (isset($_SESSION['usuario_id'])) {
                     </div>
                 <?php endif; ?>
 
-
-
+                <!-- Si el usuario inició sesión, se muestra la sección para guardar la historia,
+                     si no inició sesión, se muestra una invitación para entrar a su cuenta -->
                 <?php if (isset($_SESSION['usuario_id'])): ?>
 
                     <div class="guardar-historia mt-5">
@@ -172,10 +175,14 @@ if (isset($_SESSION['usuario_id'])) {
                             </div>
                         <?php endif; ?>
 
+                        <!-- Comprueba si tiene colecciones, por lo tanto:
+                                si tiene una o más colecciones, aparece el formulario
+                                si no tiene ninguna, aparece un mensaje para crear su primera colección -->
                         <?php if (count($colecciones) > 0): ?>
 
                             <form action="guardar_coleccion.php" method="POST">
 
+                                <!-- este campo transporta el ID de la historia que se quiera guardar -->
                                 <input
                                     type="hidden"
                                     name="contenido_id"
@@ -188,6 +195,7 @@ if (isset($_SESSION['usuario_id'])) {
                                         Selecciona una colección:
                                     </label>
 
+                                    <!-- permite elegir en qué colección se quiere guardar la historia -->
                                     <select
                                         name="coleccion_id"
                                         id="coleccion_id"
@@ -196,7 +204,7 @@ if (isset($_SESSION['usuario_id'])) {
                                     >
 
                                         <option value="">Elige una colección</option>
-
+                                        <!-- recorre todas las colecciones del usuario y crea una opción por cada una -->
                                         <?php foreach ($colecciones as $coleccion): ?>
 
                                             <option value="<?= $coleccion['id'] ?>">
@@ -227,6 +235,7 @@ if (isset($_SESSION['usuario_id'])) {
                     </div>
 
 
+                    <!-- Aquí es cuando el usuario aún no ha iniciado sesión o creado su cuenta -->
                 <?php else: ?>
 
                     <div class="guardar-historia invitacion-login mt-5">
@@ -253,7 +262,8 @@ if (isset($_SESSION['usuario_id'])) {
 
     <?php else: ?>
 
-        <!-- Mensaje cuando no se encuentra la historia -->
+        <!-- Mensaje cuando no se encuentra la historia, si el ID no es válido o no existe una historia con ese ID, 
+         se muestra este mensaje en lugar de intentar mostrar información inexistente -->
         <section class="historia-detalle text-center">
             <div class="container">
                 <h2>Esta historia se ha perdido entre la niebla...</h2>

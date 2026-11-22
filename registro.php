@@ -1,70 +1,82 @@
 <?php
 // 7º Archivo creado
+// Incluir el archivo de conexión con la base de datos
 require_once __DIR__ . '/conexion.php';
 
 // Variables iniciales
+// Arreglo donde se almacenarán los mensajes de error
 $errores = [];
+// Indica si el registro se realizó correctamente
 $registroExitoso = false;
-
+// Variables para conservar el nombre y correo escritos
 $nombre = "";
 $correo = "";
 
-// Comprobar si se envió el formulario
+// Comprobar si el formulario fue enviado mediante POST
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    // Recuperar los datos del formulario
+    // Recuperar los datos enviados desde el formulario
     $nombre = trim($_POST['nombre']);
     $correo = trim($_POST['correo']);
     $contrasena = $_POST['contrasena'];
     $confirmarContrasena = $_POST['confirmar_contrasena'];
 
-    // Validar los campos
+    // Validar que el nombre no esté vacío
     if (empty($nombre)) {
         $errores[] = "El nombre es obligatorio.";
     }
 
+    // Comprobar que el correo tenga un formato válido
     if (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
         $errores[] = "Ingresa un correo electrónico válido.";
     }
 
+    // Comprobar que la contraseña tenga al menos 8 caracteres
     if (strlen($contrasena) < 8) {
         $errores[] = "La contraseña debe tener al menos 8 caracteres.";
     }
 
+    // Comprobar que ambas contraseñas coincidan
     if ($contrasena !== $confirmarContrasena) {
         $errores[] = "Las contraseñas no coinciden.";
     }
 
     // Comprobar si el correo ya está registrado
+    // Esta consulta solamente se realiza si no existen errores anteriores
     if (empty($errores)) {
 
+        // Buscar si ya existe un usuario con ese correo
         $consulta = $bd->prepare("SELECT id FROM usuarios WHERE correo = ?");
         $consulta->execute([$correo]);
-
+        // Si se encuentra un registro, agrega un mensaje de error
         if ($consulta->fetch()) {
             $errores[] = "Este correo electrónico ya está registrado.";
         }
     }
 
-    // Guardar el usuario si no existen errores
+    // Guarda el usuario solo si no existen errores
     if (empty($errores)) {
 
+        // Encripta la contraseña mediante un hash seguro
         $contrasenaHash = password_hash($contrasena, PASSWORD_DEFAULT);
 
+        // Prepara la instrucción SQL para insertar al nuevo usuario
         $consulta = $bd->prepare(
             "INSERT INTO usuarios (nombre, correo, contrasena)
              VALUES (?, ?, ?)"
         );
 
+        // Ejecuta la consulta enviando los datos del nuevo usuario, se almacena el hash, no la contraseña original
         $consulta->execute([
             $nombre,
             $correo,
             $contrasenaHash
         ]);
 
+        // Indica que el registro se realizó correctamente
         $registroExitoso = true;
 
-        // Limpiar los campos
+        // Limpiar los campos de nombre y correo después del registro
         $nombre = "";
         $correo = "";
     }
@@ -128,12 +140,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
     </nav>
 
-    <!-- Registro -->
+    <!-- Sección principal del registro -->
     <section class="registro-section">
         <div class="container">
 
             <div class="registro-card">
 
+                <!-- Título y descripción del formulario -->
                 <div class="text-center mb-4">
                     <h2>Únete a Beyond the Mist</h2>
 
@@ -156,12 +169,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 <?php endif; ?>
 
-                <!-- Mostrar errores -->
+                <!-- Mostrar los errores encontrados durante la validación -->
                 <?php if (!empty($errores)): ?>
 
                     <div class="alert alert-danger">
                         <?php foreach ($errores as $error): ?>
                             <p class="mb-1">
+                                <!-- Mostrar cada mensaje de error  -->
                                 <?= htmlspecialchars($error) ?>
                             </p>
                         <?php endforeach; ?>
@@ -169,9 +183,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 <?php endif; ?>
 
-                <!-- Formulario -->
+                <!-- Formulario para registrar un nuevo usuario -->
+                <!-- Los datos se envían a este mismo archivo mediante POST -->
                 <form action="registro.php" method="POST">
 
+                    <!-- Campo para el nombre -->
                     <div class="mb-3">
                         <label for="nombre" class="form-label">
                             Nombre
@@ -188,6 +204,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         />
                     </div>
 
+                    <!-- Campo para el correo electrónico -->
                     <div class="mb-3">
                         <label for="correo" class="form-label">
                             Correo electrónico
@@ -204,6 +221,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         />
                     </div>
 
+                    <!-- Campo para crear la contraseña -->
                     <div class="mb-3">
                         <label for="contrasena" class="form-label">
                             Contraseña
@@ -220,6 +238,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         />
                     </div>
 
+                    <!-- Campo para confirmar la contraseña -->
                     <div class="mb-4">
                         <label for="confirmar_contrasena" class="form-label">
                             Confirmar contraseña
@@ -235,12 +254,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         />
                     </div>
 
+                    <!-- Botón que envía el formulario -->
                     <button type="submit" class="btn btn-registro w-100">
                         Crear cuenta
                     </button>
 
                 </form>
 
+                 <!-- Enlace para usuarios que ya tienen una cuenta -->
                 <p class="text-center mt-4 mb-0">
                     ¿Ya tienes una cuenta?
                     <a href="login.php">Inicia sesión</a>
